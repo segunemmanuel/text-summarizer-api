@@ -4,8 +4,8 @@ use App\Http\Controllers\SummarizerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileSummarizerController;
-
-// use Illuminate\Support\Facades\Route;
+use App\Models\Feed;
+use App\Jobs\FetchFeedJob;
 use App\Http\Controllers\IngestController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ClusterController;
@@ -37,3 +37,16 @@ Route::get('/clusters/{id}', [ClusterController::class, 'show']);
 
 Route::post('/topics', [TopicController::class, 'create']);        // user topics
 Route::get('/digest/today', [DigestController::class, 'today']);   // demo digest payload
+
+
+Route::post('/fetch-now', function () {
+    $feeds = Feed::all();
+    foreach ($feeds as $feed) {
+        FetchFeedJob::dispatch($feed->url);
+    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Feed ingestion triggered for all feeds.',
+        'count' => $feeds->count()
+    ]);
+});
