@@ -1,0 +1,14 @@
+### Summarize DOCX file
+POST http://localhost:8000/api/summarize-file
+Content-Type: multipart/form-data; boundary=BOUNDARY
+
+--BOUNDARY
+Content-Disposition: form-data; name="file"; filename="bbbb.docx"
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
+< C:\Users\user\Downloads\bbbb.docx
+--BOUNDARY
+Content-Disposition: form-data; name="mode"
+
+bullet
+--BOUNDARY--
